@@ -22,7 +22,7 @@ app.route('/api/v1/meta', meta)
 app.route('/api/v1/presence', presence)
 
 app.get('/', (c) => {
-  return c.text('DevOps test')
+  return c.text('Bilbis Queue')
 })
 
 app.get('/api/bacon', async (c) => {
