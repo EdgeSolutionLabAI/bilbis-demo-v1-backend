@@ -1,10 +1,12 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { meta } from './routes/meta.js'
+import { presence } from './routes/presence.js'
 
 const app = new Hono()
 
 app.route('/api/v1/meta', meta)
+app.route('/api/v1/presence', presence)
 
 app.get('/', (c) => {
   return c.text('Bilbis Demo V1')
