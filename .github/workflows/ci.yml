@@ -17,4 +17,4 @@ jobs:
           cache: 'pnpm'
       - run: npm install -g pnpm@10.30.3
       - run: pnpm install --frozen-lockfile
-      - run: npm test
+      - run: pnpm test
