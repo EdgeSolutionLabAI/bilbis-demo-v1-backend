@@ -5,6 +5,19 @@ import { presence } from './routes/presence.js'
 
 const app = new Hono()
 
+// Normalize paths with consecutive slashes (e.g. //api/v1/… → /api/v1/…) so that
+// misconfigured clients sending a double-slash base URL don't hit Vercel's 308 redirect,
+// which strips CORS headers and breaks preflight requests.
+app.use('*', async (c, next) => {
+  const url = new URL(c.req.url)
+  const normalized = url.pathname.replace(/\/{2,}/g, '/')
+  if (normalized !== url.pathname) {
+    url.pathname = normalized
+    return c.redirect(url.toString(), 307)
+  }
+  return next()
+})
+
 app.route('/api/v1/meta', meta)
 app.route('/api/v1/presence', presence)
 
