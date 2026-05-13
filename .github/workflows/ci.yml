@@ -12,13 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # actions/setup-node uses Node.js from the runner; keep it current
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: 'pnpm'
 
-      # Avoid relying on corepack-installed pnpm binaries in constrained CI
-      - run: npm i -g pnpm@10.30.3
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm test
+      # Ensure pnpm is available via corepack in PATH.
+      # This avoids failures where pnpm isn't present or isn't executable.
+      - run: corepack enable
+      - run: corepack prepare pnpm@10.30.3 --activate
+      - run: corepack pnpm -v
+
+      - run: corepack pnpm install --frozen-lockfile
+      - run: corepack pnpm test
