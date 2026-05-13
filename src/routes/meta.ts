@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
@@ -10,6 +11,8 @@ const commit = process.env.GIT_SHA ?? 'dev'
 const buildTime = new Date().toISOString()
 
 const meta = new Hono()
+
+meta.use(cors({ origin: 'https://bilbis-demo-v1-frontend.vercel.app' }))
 
 // TODO (KAI-52): Add OpenAPI spec entry for this endpoint once OpenAPI is wired up.
 meta.get('/version', (c) => {
