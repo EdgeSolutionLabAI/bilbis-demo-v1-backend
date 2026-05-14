@@ -1,10 +1,13 @@
 import { serve } from '@hono/node-server'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import { health } from './routes/health.js'
 import { image } from './routes/image.js'
 import { meta } from './routes/meta.js'
 import { presence } from './routes/presence.js'
+
+const FE_ORIGIN = 'https://bilbis-demo-v1-frontend.vercel.app'
 
 const app = new Hono()
 
@@ -20,6 +23,11 @@ app.use('*', async (c, next) => {
   }
   return next()
 })
+
+// Allow the deployed frontend to call every API endpoint (simple GETs and preflights).
+// Routes that mount their own cors() middleware remain correct — the header value is
+// identical so the second write is a no-op at the HTTP level.
+app.use('*', cors({ origin: FE_ORIGIN }))
 
 app.route('/health', health)
 app.route('/api/v1/meta', meta)
