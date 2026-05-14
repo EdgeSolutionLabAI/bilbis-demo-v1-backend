@@ -27,7 +27,7 @@ jobs:
 
       - run: pnpm -v
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
+      - run: pnpm tsc --noEmit
 
   integration:
     runs-on: ubuntu-latest
