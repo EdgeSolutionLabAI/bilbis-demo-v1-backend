@@ -5,6 +5,10 @@ on:
   push:
     branches: [main, master]
   pull_request:
+  workflow_dispatch:
+  schedule:
+    # Nightly run at 02:00 UTC against production — don't hammer prod on every push.
+    - cron: '0 2 * * *'
 
 jobs:
   ci:
@@ -24,3 +28,42 @@ jobs:
       - run: pnpm -v
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
+
+  integration:
+    runs-on: ubuntu-latest
+    needs: ci
+    # Run on push/PR (against localhost) and on manual dispatch/schedule (against production).
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.30.3
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # For scheduled/manual runs use the live production backend; otherwise spin up locally.
+      - name: Start local server (push / PR only)
+        if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
+        run: |
+          pnpm dev &
+          until curl -sf http://localhost:3000/health; do sleep 1; done
+        env:
+          GIT_SHA: ${{ github.sha }}
+
+      - name: Run integration tests (local)
+        if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
+        run: pnpm test:integration
+        env:
+          API_BASE_URL: http://localhost:3000
+
+      - name: Run integration tests (production)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: pnpm test:integration
+        env:
+          API_BASE_URL: https://bilbis-demo-v1-backend.vercel.app
