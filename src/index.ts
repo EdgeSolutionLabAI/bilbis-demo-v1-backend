@@ -1,6 +1,7 @@
 import { serve } from '@hono/node-server'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import { health } from './routes/health.js'
 import { image } from './routes/image.js'
 import { meta } from './routes/meta.js'
@@ -8,6 +9,8 @@ import { presence } from './routes/presence.js'
 import { time } from './routes/time.js'
 
 const app = new Hono()
+
+app.use('*', cors({ origin: 'https://bilbis-demo-v1-frontend.vercel.app' }))
 
 // Normalize paths with consecutive slashes (e.g. //api/v1/… → /api/v1/…) so that
 // misconfigured clients sending a double-slash base URL don't hit Vercel's 308 redirect,
