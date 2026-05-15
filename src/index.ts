@@ -1,6 +1,7 @@
 import { serve } from '@hono/node-server'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { Hono } from 'hono'
+import { coinFlip } from './routes/coin-flip.js'
 import { health } from './routes/health.js'
 import { image } from './routes/image.js'
 import { meta } from './routes/meta.js'
@@ -22,6 +23,7 @@ app.use('*', async (c, next) => {
 })
 
 app.route('/health', health)
+app.route('/api/coin-flip', coinFlip)
 app.route('/api/v1/meta', meta)
 app.route('/api/v1/presence', presence)
 app.route('/api/v1/image', image)
