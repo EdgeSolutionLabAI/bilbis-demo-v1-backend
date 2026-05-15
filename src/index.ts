@@ -5,6 +5,7 @@ import { health } from './routes/health.js'
 import { image } from './routes/image.js'
 import { meta } from './routes/meta.js'
 import { presence } from './routes/presence.js'
+import { time } from './routes/time.js'
 
 const app = new Hono()
 
@@ -25,6 +26,7 @@ app.route('/health', health)
 app.route('/api/v1/meta', meta)
 app.route('/api/v1/presence', presence)
 app.route('/api/v1/image', image)
+app.route('/api/time', time)
 
 app.get('/api/bacon', async (c) => {
   const width = c.req.query('width') ?? '300'
