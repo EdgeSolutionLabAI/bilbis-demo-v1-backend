@@ -20,8 +20,7 @@ jobs:
         with:
           node-version: '22'
 
-      # corepack reads the packageManager field (pnpm@10.30.3) from package.json
-      - run: corepack enable
+      - run: npm install -g pnpm@10.30.3
 
       - run: pnpm -v
       - run: pnpm install
@@ -38,8 +37,7 @@ jobs:
         with:
           node-version: '22'
 
-      # corepack reads the packageManager field (pnpm@10.30.3) from package.json
-      - run: corepack enable
+      - run: npm install -g pnpm@10.30.3
 
       - run: pnpm install
 
