@@ -16,15 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v5
-        with:
-          version: 10.30.3
-
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-          cache: pnpm
 
+      - run: corepack enable
       - run: pnpm -v
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
@@ -36,15 +32,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v5
-        with:
-          version: 10.30.3
-
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-          cache: pnpm
 
+      - run: corepack enable
       - run: pnpm install --frozen-lockfile
 
       # For scheduled/manual runs use the live production backend; otherwise spin up locally.
