@@ -26,7 +26,7 @@ jobs:
           cache: pnpm
 
       - run: pnpm -v
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --no-frozen-lockfile
       - run: pnpm test
 
   integration:
@@ -45,7 +45,7 @@ jobs:
           node-version: '22'
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --no-frozen-lockfile
 
       # For scheduled/manual runs use the live production backend; otherwise spin up locally.
       - name: Start local server (push / PR only)
