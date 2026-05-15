@@ -13,6 +13,8 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v5
 
@@ -26,12 +28,14 @@ jobs:
           cache: pnpm
 
       - run: pnpm -v
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install
       - run: pnpm test
 
   integration:
     runs-on: ubuntu-latest
     needs: ci
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     # Run on push/PR (against localhost) and on manual dispatch/schedule (against production).
     steps:
       - uses: actions/checkout@v5
@@ -45,7 +49,7 @@ jobs:
           node-version: '22'
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install
 
       # For scheduled/manual runs use the live production backend; otherwise spin up locally.
       - name: Start local server (push / PR only)
