@@ -10,6 +10,9 @@ on:
     # Nightly run at 02:00 UTC against production — don't hammer prod on every push.
     - cron: '0 2 * * *'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -26,7 +29,7 @@ jobs:
           cache: pnpm
 
       - run: pnpm -v
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install
       - run: pnpm test
 
   integration:
@@ -45,7 +48,7 @@ jobs:
           node-version: '22'
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install
 
       # For scheduled/manual runs use the live production backend; otherwise spin up locally.
       - name: Start local server (push / PR only)
