@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { assertCorsAllowOrigin, BASE_URL, withOrigin } from './setup.js'
 
 describe('GET /matches/today', () => {
-  it('returns 200 with a JSON array of matches', async () => {
+  it('returns 200 with a JSON array', async () => {
     const res = await fetch(`${BASE_URL}/matches/today`, {
       headers: withOrigin(),
     })
@@ -11,7 +11,7 @@ describe('GET /matches/today', () => {
 
     const body = await res.json()
     expect(Array.isArray(body)).toBe(true)
-    expect(body.length).toBeGreaterThan(0)
+    // Live API may return zero matches on a quiet day — empty array is a valid response
   })
 
   it('each match has the required fields with correct types', async () => {
@@ -31,7 +31,16 @@ describe('GET /matches/today', () => {
       })
       // time must be a parseable ISO-8601 datetime
       expect(new Date((match as { time: string }).time).getTime()).not.toBeNaN()
+      // format must be BO-style (BO1, BO3, BO5, etc.)
+      expect((match as { format: string }).format).toMatch(/^BO\d+$/)
     }
+  })
+
+  it('sets Cache-Control: no-store to prevent stale responses', async () => {
+    const res = await fetch(`${BASE_URL}/matches/today`, {
+      headers: withOrigin(),
+    })
+    expect(res.headers.get('cache-control')).toBe('no-store')
   })
 
   it('responds with CORS allow-origin header for the production FE origin', async () => {
