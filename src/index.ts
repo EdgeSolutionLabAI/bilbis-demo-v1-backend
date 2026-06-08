@@ -8,6 +8,7 @@ import { matches } from './routes/matches.js'
 import { meta } from './routes/meta.js'
 import { presence } from './routes/presence.js'
 import { time } from './routes/time.js'
+import { feedback } from './routes/feedback.js'
 
 const app = new Hono()
 
@@ -32,6 +33,7 @@ app.route('/api/v1/meta', meta)
 app.route('/api/v1/presence', presence)
 app.route('/api/v1/image', image)
 app.route('/api/time', time)
+app.route('/api/feedback', feedback)
 
 app.get('/api/bacon', async (c) => {
   const width = c.req.query('width') ?? '300'
