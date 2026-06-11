@@ -5,7 +5,7 @@ import { cors } from 'hono/cors'
 import { health } from './routes/health.js'
 import { image } from './routes/image.js'
 import { matches } from './routes/matches.js'
-import { meta } from './routes/meta.js'
+import { meta, simpleVersion } from './routes/meta.js'
 import { presence } from './routes/presence.js'
 import { time } from './routes/time.js'
 import { feedback } from './routes/feedback.js'
@@ -27,6 +27,7 @@ app.use('*', async (c, next) => {
   return next()
 })
 
+app.route('/version', simpleVersion)
 app.route('/health', health)
 app.route('/matches', matches)
 app.route('/api/v1/meta', meta)

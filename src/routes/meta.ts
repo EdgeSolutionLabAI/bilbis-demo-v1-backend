@@ -20,4 +20,10 @@ meta.get('/version', (c) => {
   return c.json({ version, commit, buildTime })
 })
 
-export { meta }
+// Simple version endpoint that returns just the git SHA
+const simpleVersion = new Hono()
+simpleVersion.get('/', (c) => {
+  return c.json({ version: process.env.GIT_SHA ?? 'unknown' })
+})
+
+export { meta, simpleVersion }
